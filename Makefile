@@ -4,39 +4,38 @@ NAME		:= 	pipex
 
 # -=-=-=-=-    PATH -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= #
 
-INCS		:=	includes
-
 LIBFTDIR	:=	libft
 
 # -=-=-=-=-    FILES -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
-SRC			:=	srcs/pipex.c
+SRC			:=	pipex.c		\
+				error.c
 
-HEADER		:=	$(INCLUDES)/pipex.h
+HEADER		:=	pipex.h
 
 MAKE		:=	Makefile
 
 OBJS		:=	$(SRC:%.c=%.o)
 
-LIBS		:=	$(LIBFTDIR)/libft.a
+LIB			:=	$(LIBFTDIR)/libft.a
 
 # -=-=-=-=-    FLAGS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= #
 
 CC			:=	-cc
 
-CFLAGS		:=	-Werror -Wextra -Wall -Wunreachable-code -pthread -g
+CFLAGS		:=	-Werror -Wextra -Wall -Wunreachable-code -pthread -g -fsanitize=address
 
-INCLUDE		:=	-Iincludes
+INCLUDE		:=	-I
 
 # -=-=-=-=-    TARGETS -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
 all: make_libft $(NAME)
 
 %.o: %.c $(HEADER) Makefile
-	$(CC) $(CFLAGS) $(INCLUDE) $(LIBS) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDE)$(LIBFTDIR) -c $< -o $@
 
-$(NAME): $(OBJS) $(SRCS) Makefile includes/pipex.h
-	$(CC) $(CFLAGS) $(OBJS) $(INCLUDE) $(LIBS) -o $(NAME)
+$(NAME): $(OBJS) $(SRCS) Makefile $(HEADER)
+	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME)
 
 make_libft:
 	make -C libft
