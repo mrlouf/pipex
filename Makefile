@@ -9,7 +9,8 @@ LIBFTDIR	:=	libft
 # -=-=-=-=-    FILES -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
 SRC			:=	pipex.c		\
-				error.c
+				error.c		\
+				execute.c
 
 HEADER		:=	pipex.h
 
