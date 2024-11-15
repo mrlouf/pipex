@@ -43,6 +43,7 @@ make_libft:
 
 clean:
 	/bin/rm -f $(OBJS)
+	make clean -C libft
 
 fclean: clean
 	/bin/rm -f $(NAME)

@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/15 13:04:25 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/15 14:15:29 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,13 @@ void	clean_pipex(t_pipex *pipex)
 {
 	int	i;
 
-	i = -1;
 	close_fds(pipex->fd_infile, pipex->fd_outfile);
+	i = -1;
+	if (pipex->commands == NULL)
+		return ;
 	while (++i < pipex->nb_cmds)
-	{
-		free_array((void **)pipex->cmd_paths[i]);
-	}
+		free_array((void **)pipex->commands[i]);
+	free(pipex->commands);
 }
 
 void	print_array(char **array)
@@ -61,6 +62,7 @@ void	print_array(char **array)
 	i = -1;
 	while (array[++i])
 	{
-		printf("%s\n", array[i]);
+		printf("%s ", array[i]);
 	}
+	printf("\n");
 }

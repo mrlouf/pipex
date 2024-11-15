@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:50:10 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/15 14:01:15 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/15 14:36:10 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,16 +32,18 @@ typedef struct s_pipex
 	int		nb_cmds;
 	char	**args;
 	char	***commands;
-	char	**cmd_paths;
+	char	**paths;
 }	t_pipex;
 
 //  INITIALISATION AND CHECKS
 void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp);
-char	**find_cmdpaths(char **envp);
+void	get_paths(t_pipex *pipex);
 void	check_parameters(t_pipex *pipex);
 
 //	EXECUTING PIPES
 void	execute_pipex(t_pipex *pipex);
+void	child_process(t_pipex *pipex, int *end);
+void	parent_process(t_pipex *pipex, int *end);
 
 //  ERRORS, FREES & DEBUG
 void	clean_pipex(t_pipex *pipex);

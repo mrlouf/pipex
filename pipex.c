@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/15 14:02:53 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/15 14:29:04 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 /*	Use ft_strnstr to find the string PATH in envp, then use split
 	to get all command paths.	*/
 
-char	**find_cmdpaths(char **envp)
+void	get_paths(t_pipex *pipex)
 {
 	int		i;
 	char	*tmp;
@@ -24,16 +24,17 @@ char	**find_cmdpaths(char **envp)
 
 	paths = NULL;
 	i = -1;
-	while (envp[++i])
+	while (pipex->paths[++i])
 	{
-		if (ft_strnstr(envp[i], "PATH", 4) != 0)
+		if (ft_strnstr(pipex->paths[i], "PATH", 4) != 0)
 		{
-			tmp = ft_strchr(envp[i], '=');
+			tmp = ft_strchr(pipex->paths[i], '=');
 			paths = ft_split(tmp + 4, ':');
-			return (paths);
 		}
 	}
-	return (paths);
+	if (paths == NULL)
+		print_error(ENOENT);
+	pipex->paths = paths;
 }
 
 void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp)
@@ -51,7 +52,7 @@ void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp)
 	pipex->is_heredoc = -1;
 	pipex->is_invalidinfile = -1;
 	pipex->nb_cmds = ac - 3;
-	pipex->cmd_paths = envp;
+	pipex->paths = envp;
 	pipex->args = av + 1;
 }
 
@@ -59,7 +60,6 @@ void	check_parameters(t_pipex *pipex)
 {
 	int	i;
 
-	//pipex->cmd_paths = find_cmdpaths(pipex->cmd_paths);
 	pipex->commands = (char ***)malloc(sizeof(char **) * (pipex->nb_cmds + 1));
 	if (!pipex->commands)
 		print_error(ENOMEM);
@@ -72,6 +72,7 @@ void	check_parameters(t_pipex *pipex)
 			print_error(ENOMEM);
 		print_array(pipex->commands[i]);
 	}
+	get_paths(pipex);
 }
 
 int	main(int ac, char **av, char **envp)
