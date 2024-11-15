@@ -1,2 +1,0 @@
-This is printed in example.txt!
-I have permission
