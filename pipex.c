@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/18 17:19:35 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:59:23 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@ int	main(int ac, char **av, char **envp)
 	open_files(&pipex);
 	check_parameters(&pipex);
 	execute_pipex(&pipex);
-	//clean_pipex(&pipex);
+	clean_pipex(&pipex);
 	return (EXIT_SUCCESS);
 }
