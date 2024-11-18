@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 14:57:21 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/18 14:18:21 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/18 17:33:11 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ void	check_paths(t_pipex *pipex)
 	int		k;
 	char	*tmp;
 
-	tmp = NULL;
 	i = -1;
 	k = -1;
 	while (pipex->commands[++i])
@@ -78,16 +77,21 @@ void	check_paths(t_pipex *pipex)
 		j = -1;
 		while (pipex->paths[++j])
 		{
+			if (access(pipex->commands[i][0], X_OK) == 0)
+			{
+				pipex->filename[++k] = pipex->commands[i][0];
+				break ;
+			}
 			tmp = copy_path_cmd(pipex->paths[j], pipex->commands[i][0]);
 			if (access(tmp, X_OK) == 0)
 			{
 				pipex->filename[++k] = ft_strdup(tmp);
+				free(tmp);
 				break ;
 			}
 			free(tmp);
 		}
 	}
-	free(tmp);
 }
 
 void	check_parameters(t_pipex *pipex)
@@ -119,10 +123,10 @@ void	open_files(t_pipex *pipex)
 	if (pipex->fd_infile < 0)
 		print_error(errno);
 	pipex->fd_outfile = open(pipex->args[pipex->nb_cmds + 1], \
-			O_WRONLY | O_CREAT | O_TRUNC, 0); // flag 0 au lieu de 00777?
+			O_WRONLY | O_CREAT | O_TRUNC, 0);
 	if (pipex->fd_outfile < 0)
 	{
 		close(pipex->fd_outfile);
-		print_error(errno);
+		print_error(EACCES);
 	}
 }
