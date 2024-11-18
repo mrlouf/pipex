@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/15 14:37:37 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/18 14:18:20 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,26 @@
 
 void	child_process(t_pipex *pipex, int *end)
 {
+	close(end[0]);
 	dup2(pipex->fd_infile, STDIN_FILENO);
 	close(pipex->fd_infile);
-	dup2(end[1], STDOUT_FILENO);
-	close(end[0]);
-	execve("/usr/bin/grep", pipex->commands[0], NULL);
-	write(2, "Child failed\n", 13);
-	exit(EXIT_FAILURE);
+	if (access(pipex->filename[0], X_OK) == 0)
+		execve(pipex->filename[0], pipex->commands[0], pipex->paths);
+	write(2, "Command not found\n", 18);
+	return ;
 }
 
 void	parent_process(t_pipex *pipex, int *end)
 {
-	dup2(pipex->fd_outfile, 1);
-	close(pipex->fd_outfile);
-	dup2(end[0], 0);
+	wait(0);
 	close(end[1]);
-	execve("/usr/bin/wc", pipex->commands[1], NULL);
+	dup2(end[0], STDIN_FILENO);
+	dup2(pipex->fd_outfile, STDOUT_FILENO);
+	//close(pipex->fd_outfile);
+	if (access(pipex->filename[1], X_OK) == 0)
+		execve(pipex->filename[1], pipex->commands[1], pipex->paths);
 	write(2, "Parent failed\n", 14);
-	exit(EXIT_FAILURE);
+	return ;
 }
 
 void	execute_pipex(t_pipex *pipex)

@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:50:10 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/15 14:36:10 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/18 11:52:44 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,12 @@ typedef struct s_pipex
 	char	**args;
 	char	***commands;
 	char	**paths;
+	char	**filename;
 }	t_pipex;
 
 //  INITIALISATION AND CHECKS
 void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp);
+void	open_files(t_pipex *pipex);
 void	get_paths(t_pipex *pipex);
 void	check_parameters(t_pipex *pipex);
 
@@ -50,6 +52,9 @@ void	clean_pipex(t_pipex *pipex);
 void	print_error(int err);
 void	free_array(void **array);
 void	close_fds(int fd1, int fd2);
+
+//	UTILS & DEBUG
 void	print_array(char **array);
+char	*copy_path_cmd(const char *s1, const char *s2);
 
 #endif

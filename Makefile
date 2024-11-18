@@ -10,7 +10,8 @@ LIBFTDIR	:=	libft
 
 SRC			:=	pipex.c		\
 				error.c		\
-				execute.c
+				execute.c	\
+				utils.c
 
 HEADER		:=	pipex.h
 

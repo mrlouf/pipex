@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/15 14:15:29 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/18 11:55:25 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	free_array(void **array)
 	i = -1;
 	while (array[++i])
 		free(array[i]);
-	printf("i=%d\n", i);
+	ft_printf("i=%d\n", i);
 	free(array);
 	array = NULL;
 }
@@ -62,7 +62,7 @@ void	print_array(char **array)
 	i = -1;
 	while (array[++i])
 	{
-		printf("%s ", array[i]);
+		ft_printf("%s ", array[i]);
 	}
-	printf("\n");
+	ft_printf("\n");
 }
