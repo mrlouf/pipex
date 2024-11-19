@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 14:57:21 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 12:12:38 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 12:22:23 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ void	get_paths(t_pipex *pipex)
 	}
 	pipex->paths = paths;
 }
+
+/*	Checks if the argument already is the complete path, if not look for it
+	in the envp		*/
 
 void	check_paths(t_pipex *pipex)
 {

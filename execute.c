@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 12:19:10 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 12:19:47 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	parent_process(t_pipex *pipex, int *end)
 {
 	int	status;
 
-	write(2, "cucufu\n", 7);
 	waitpid(-1, &status, 0);
 	close(end[1]);
 	dup2(end[0], STDIN_FILENO);
