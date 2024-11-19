@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
-#include "libft/libft.h"
+#include "../inc/pipex.h"
+#include "../libft/libft.h"
 
 //	TODO: function to unlink here_doc
 

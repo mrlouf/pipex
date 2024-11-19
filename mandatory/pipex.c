@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
-#include "libft/libft.h"
+#include "../inc/pipex.h"
+#include "../libft/libft.h"
 
 void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp)
 {

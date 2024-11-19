@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:50:10 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/18 11:52:44 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:25:35 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <errno.h>
-# include "libft/libft.h"
+# include "../libft/libft.h"
 
 # define READ_END   0
 # define WRITE_END  1
@@ -29,6 +29,7 @@ typedef struct s_pipex
 	int		fd_outfile;
 	int		is_heredoc;
 	int		is_invalidinfile;
+	int		ac;
 	int		nb_cmds;
 	char	**args;
 	char	***commands;
@@ -46,6 +47,9 @@ void	check_parameters(t_pipex *pipex);
 void	execute_pipex(t_pipex *pipex);
 void	child_process(t_pipex *pipex, int *end);
 void	parent_process(t_pipex *pipex, int *end);
+
+//	HEREDOC
+void	get_heredoc(t_pipex *pipex);
 
 //  ERRORS, FREES & DEBUG
 void	clean_pipex(t_pipex *pipex);

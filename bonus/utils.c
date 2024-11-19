@@ -6,12 +6,12 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 14:57:21 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 12:22:23 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:07:00 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "pipex.h"
-#include "libft/libft.h"
+#include "../inc/pipex.h"
+#include "../libft/libft.h"
 
 /*	Custom ft_strjoin to append the filename to the path with necessary '/':
 	"usr/bin" + "grep" = "usr/bin/grep"*/
@@ -118,19 +118,29 @@ void	check_parameters(t_pipex *pipex)
 	check_paths(pipex);
 }
 
-void	open_files(t_pipex *pipex)
+void	get_heredoc(t_pipex *pipex)
 {
-	pipex->fd_infile = open(pipex->args[0], O_RDONLY);
-	if (pipex->fd_infile < 0)
+	int		fd_in;
+	int		fd_out;
+	char	*line;
+
+	fd_out = open(".heredoc.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fd_in = dup(STDIN_FILENO);
+	if (fd_in < 0 || fd_out < 0)
+		print_error(errno);
+	line = "";
+	write(2, "cucufu\n", 7);
+	while (1)
 	{
-		perror("Infile");
-		pipex->is_invalidinfile = 1;
+		line = get_next_line(fd_in);
+		if (line == NULL)
+			break ;
+		if (ft_strlen(pipex->args[1]) == ft_strlen(line)
+			&& ft_strncmp(line, pipex->args[1], ft_strlen(pipex->args[1])) == 0)
+			close(fd_out);
+		else
+			ft_putstr_fd(line, fd_out);
+		free(line);
 	}
-	pipex->fd_outfile = open(pipex->args[pipex->nb_cmds + 1], \
-			O_WRONLY | O_CREAT | O_TRUNC, 0);
-	if (pipex->fd_outfile < 0)
-	{
-		close(pipex->fd_outfile);
-		print_error(EACCES);
-	}
+	close(fd_out);
 }

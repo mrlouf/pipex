@@ -2,22 +2,31 @@
 
 NAME		:= 	pipex
 
+BONUS		:=	pipex_bonus
+
 # -=-=-=-=-    PATH -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= #
 
 LIBFTDIR	:=	libft
 
 # -=-=-=-=-    FILES -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- #
 
-SRC			:=	pipex.c		\
-				error.c		\
-				execute.c	\
-				utils.c
+SRC			:=	mandatory/pipex.c		\
+				mandatory/error.c		\
+				mandatory/execute.c		\
+				mandatory/utils.c
+				
+BON			:=	bonus/pipex.c			\
+				bonus/error.c			\
+				bonus/execute.c			\
+				bonus/utils.c
 
-HEADER		:=	pipex.h
+HEADER		:=	inc/pipex.h
 
 MAKE		:=	Makefile
 
 OBJS		:=	$(SRC:%.c=%.o)
+
+BON_OBJS	:=	$(BON:%.c=%.o)
 
 LIB			:=	$(LIBFTDIR)/libft.a
 
@@ -38,16 +47,23 @@ all: make_libft $(NAME)
 
 $(NAME): $(OBJS) $(SRCS) Makefile $(HEADER)
 	$(CC) $(CFLAGS) $(OBJS) $(LIB) -o $(NAME)
+	
+bonus: make_libft .bonus
+
+.bonus: $(BON_OBJS) $(BON) Makefile $(HEADER)
+	$(CC) $(CFLAGS) $(BON_OBJS) $(LIB) -o $(BONUS)
 
 make_libft:
 	make -C libft
 
 clean:
 	/bin/rm -f $(OBJS)
+	/bin/rm -f $(BON_OBJS)
 	make clean -C libft
 
 fclean: clean
 	/bin/rm -f $(NAME)
+	/bin/rm -f $(BONUS)
 	make fclean -C libft
 
 re: fclean all
