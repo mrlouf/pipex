@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/18 18:36:00 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 11:00:29 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	child_process(t_pipex *pipex, int *end)
 	close(end[1]);
 	if (access(pipex->filename[0], X_OK) == 0)
 		execve(pipex->filename[0], pipex->commands[0], pipex->paths);
+	errno = 2;
 	perror("Command not found");
 	exit(EXIT_FAILURE);
 }
@@ -29,11 +30,13 @@ void	parent_process(t_pipex *pipex, int *end)
 	int	status;
 
 	waitpid(-1, &status, 0);
+	write(2, "cucufu\n", 7);
 	close(end[1]);
 	dup2(end[0], STDIN_FILENO);
 	close(end[0]);
 	if (access(pipex->filename[1], X_OK) == 0)
 		execve(pipex->filename[1], pipex->commands[1], pipex->paths);
+	errno = 2;
 	perror("Command not found");
 	exit(EXIT_FAILURE);
 }
