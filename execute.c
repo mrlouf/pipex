@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 17:46:42 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:18:35 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,9 @@ void	child_process(t_pipex *pipex, int *end)
 		execve(pipex->filename[0], pipex->commands[0], pipex->paths);
 	errno = 2;
 	if (pipex->is_invalidinfile == 0)
-	{
 		perror("infile");
-		exit(EXIT_FAILURE);
-	}
-	perror("command");
+	else
+		perror("command");
 	exit(EXIT_FAILURE);
 }
 
@@ -50,15 +48,20 @@ void	parent_process(t_pipex *pipex, int *end)
 	}
 }
 
+void	set_fds(t_pipex *pipex)
+{
+	dup2(pipex->fd_infile, STDIN_FILENO);
+	close(pipex->fd_infile);
+	dup2(pipex->fd_outfile, STDOUT_FILENO);
+	close(pipex->fd_outfile);
+}
+
 void	execute_pipex(t_pipex *pipex)
 {
 	int		end[2];
 	pid_t	pid;
 
-	dup2(pipex->fd_infile, STDIN_FILENO);
-	close(pipex->fd_infile);
-	dup2(pipex->fd_outfile, STDOUT_FILENO);
-	close(pipex->fd_outfile);
+	set_fds(pipex);
 	if (pipe(end) == -1)
 		print_error(errno);
 	pid = fork();

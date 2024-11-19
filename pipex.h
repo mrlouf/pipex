@@ -45,6 +45,7 @@ void	check_parameters(t_pipex *pipex);
 
 //	EXECUTING PIPES
 void	execute_pipex(t_pipex *pipex);
+void	set_fds(t_pipex *pipex);
 void	child_process(t_pipex *pipex, int *end);
 void	parent_process(t_pipex *pipex, int *end);
 
