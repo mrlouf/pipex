@@ -6,12 +6,12 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 15:05:54 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 17:46:42 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/pipex.h"
-#include "../libft/libft.h"
+#include "pipex.h"
+#include "libft/libft.h"
 
 void	child_process(t_pipex *pipex, int *end)
 {
@@ -21,7 +21,7 @@ void	child_process(t_pipex *pipex, int *end)
 	if (access(pipex->filename[0], X_OK) == 0 && pipex->is_invalidinfile == -1)
 		execve(pipex->filename[0], pipex->commands[0], pipex->paths);
 	errno = 2;
-	if (pipex->is_invalidinfile == 1)
+	if (pipex->is_invalidinfile == 0)
 	{
 		perror("infile");
 		exit(EXIT_FAILURE);
@@ -38,11 +38,16 @@ void	parent_process(t_pipex *pipex, int *end)
 	close(end[1]);
 	dup2(end[0], STDIN_FILENO);
 	close(end[0]);
+	if (pipex->is_heredoc == 1)
+		unlink(".heredoc.tmp");
 	if (access(pipex->filename[1], X_OK) == 0)
 		execve(pipex->filename[1], pipex->commands[1], pipex->paths);
-	errno = 2;
-	perror("Command not found");
-	exit(EXIT_FAILURE);
+	if (pipex->is_invalidinfile != 0)
+	{
+		errno = 2;
+		perror("Command not found");
+		exit(EXIT_FAILURE);
+	}
 }
 
 void	execute_pipex(t_pipex *pipex)
@@ -63,6 +68,4 @@ void	execute_pipex(t_pipex *pipex)
 		child_process(pipex, end);
 	else
 		parent_process(pipex, end);
-	if (pipex->is_heredoc == 1)
-		unlink(".heredoc.tmp");
 }

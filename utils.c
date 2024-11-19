@@ -6,12 +6,12 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 14:57:21 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 15:07:00 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 16:24:07 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../inc/pipex.h"
-#include "../libft/libft.h"
+#include "pipex.h"
+#include "libft/libft.h"
 
 /*	Custom ft_strjoin to append the filename to the path with necessary '/':
 	"usr/bin" + "grep" = "usr/bin/grep"*/
@@ -106,7 +106,8 @@ void	check_parameters(t_pipex *pipex)
 	i = -1;
 	while (++i < pipex->nb_cmds)
 	{
-		pipex->commands[i] = ft_split(pipex->args[i + 1], ' ');
+		pipex->commands[i] = \
+			ft_split(pipex->args[i + 1 + pipex->is_heredoc], ' ');
 		if (pipex->commands[i] == NULL)
 			print_error(ENOMEM);
 	}
@@ -129,15 +130,14 @@ void	get_heredoc(t_pipex *pipex)
 	if (fd_in < 0 || fd_out < 0)
 		print_error(errno);
 	line = "";
-	write(2, "cucufu\n", 7);
 	while (1)
 	{
 		line = get_next_line(fd_in);
 		if (line == NULL)
 			break ;
-		if (ft_strlen(pipex->args[1]) == ft_strlen(line)
-			&& ft_strncmp(line, pipex->args[1], ft_strlen(pipex->args[1])) == 0)
-			close(fd_out);
+		if (ft_strlen(pipex->args[1]) + 1 == ft_strlen(line)
+			&& !ft_strncmp(line, pipex->args[1], ft_strlen(pipex->args[1] + 1)))
+			close(fd_in);
 		else
 			ft_putstr_fd(line, fd_out);
 		free(line);

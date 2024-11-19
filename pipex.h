@@ -18,7 +18,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <errno.h>
-# include "../libft/libft.h"
+# include "libft/libft.h"
 
 # define READ_END   0
 # define WRITE_END  1
