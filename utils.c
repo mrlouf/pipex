@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 14:57:21 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 10:45:24 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 12:12:38 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,8 @@ void	open_files(t_pipex *pipex)
 	pipex->fd_infile = open(pipex->args[0], O_RDONLY);
 	if (pipex->fd_infile < 0)
 	{
-		print_error(errno);
-		pipex->fd_infile = 1;
+		perror("Infile");
+		pipex->is_invalidinfile = 1;
 	}
 	pipex->fd_outfile = open(pipex->args[pipex->nb_cmds + 1], \
 			O_WRONLY | O_CREAT | O_TRUNC, 0);
