@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 18:18:35 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:46:34 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ void	child_process(t_pipex *pipex, int *end)
 	if (access(pipex->filename[0], X_OK) == 0 && pipex->is_invalidinfile == -1)
 		execve(pipex->filename[0], pipex->commands[0], pipex->paths);
 	errno = 2;
-	if (pipex->is_invalidinfile == 0)
+	if (pipex->is_invalidinfile == 1)
 		perror("infile");
 	else
 		perror("command");
-	exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
 }
 
 void	parent_process(t_pipex *pipex, int *end)
