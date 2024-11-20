@@ -31,7 +31,6 @@ void	free_array(void **array)
 	i = -1;
 	while (array[++i])
 		free(array[i]);
-	ft_printf("i=%d\n", i);
 	free(array);
 	array = NULL;
 }
@@ -53,6 +52,8 @@ void	clean_pipex(t_pipex *pipex)
 	while (++i < pipex->nb_cmds)
 		free_array((void **)pipex->commands[i]);
 	free(pipex->commands);
+	if (pipex->is_heredoc == 1)
+		unlink(".heredoc.tmp");
 }
 
 void	print_array(char **array)

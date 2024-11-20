@@ -21,7 +21,7 @@ void	open_files(t_pipex *pipex)
 	{
 		get_heredoc(pipex);
 		pipex->fd_infile = open(".heredoc.tmp", O_RDONLY, 0644);
-		pipex->nb_cmds = 2;
+		pipex->nb_cmds = pipex->ac - 4;
 	}
 	else
 		pipex->fd_infile = open(pipex->args[0], O_RDONLY);
@@ -37,6 +37,24 @@ void	open_files(t_pipex *pipex)
 		print_error(EACCES);
 }
 
+void	create_pipes(t_pipex *pipex)
+{
+	int	i;
+
+	i = -1;
+	pipex->pids = malloc(sizeof(int *) * pipex->nb_cmds);
+	if (!pipex->pids)
+		print_error(errno);
+	pipex->pipe = malloc(sizeof(int *) * 2 * (pipex->nb_cmds - 1));
+	if (!pipex->pipe)
+		print_error(errno);
+	while (++i < pipex->nb_cmds - 1)
+	{
+		if (pipe(pipex->pipe + 2 * i) == -1)
+			print_error(errno);
+	}
+}
+
 void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp)
 {
 	if (ac < 5)
@@ -49,6 +67,9 @@ void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp)
 	pipex->nb_cmds = ac - 3;
 	pipex->paths = envp;
 	pipex->args = av + 1;
+	pipex->child = 0;
+	pipex->pipe = 0;
+	pipex->pids = 0;
 }
 
 int	main(int ac, char **av, char **envp)

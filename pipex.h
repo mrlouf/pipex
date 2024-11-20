@@ -31,6 +31,9 @@ typedef struct s_pipex
 	int		is_invalidinfile;
 	int		ac;
 	int		nb_cmds;
+	int		child;
+	int		*pids;
+	int		*pipe;
 	char	**args;
 	char	***commands;
 	char	**paths;
@@ -44,10 +47,12 @@ void	get_paths(t_pipex *pipex);
 void	check_parameters(t_pipex *pipex);
 
 //	EXECUTING PIPES
+void	create_pipes(t_pipex *pipex);
 void	execute_pipex(t_pipex *pipex);
-void	set_fds(t_pipex *pipex);
-void	child_process(t_pipex *pipex, int *end);
-void	parent_process(t_pipex *pipex, int *end);
+void	redirect_fds(int input, int output);
+void	child_process(t_pipex *pipex);
+void	parent_process(t_pipex *pipex);
+void	close_allfds(t_pipex *pipex);
 
 //	HEREDOC
 void	get_heredoc(t_pipex *pipex);

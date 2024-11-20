@@ -13,62 +13,75 @@
 #include "pipex.h"
 #include "libft/libft.h"
 
-void	child_process(t_pipex *pipex, int *end)
+void	child_process(t_pipex *pipex)
 {
-	close(end[0]);
-	dup2(end[1], STDOUT_FILENO);
-	close(end[1]);
-	if (access(pipex->filename[0], X_OK) == 0 && pipex->is_invalidinfile == -1)
-		execve(pipex->filename[0], pipex->commands[0], pipex->paths);
-	errno = 2;
-	if (pipex->is_invalidinfile == 1)
-		perror("infile");
+	if (pipex->child == 0)
+		redirect_fds(pipex->fd_infile, pipex->pipe[1]);
+	else if (pipex->child == pipex->nb_cmds - 1)
+		redirect_fds(pipex->pipe[2 * pipex->child - 2], pipex->fd_outfile);
 	else
-		perror("command");
+		redirect_fds(pipex->pipe[2 * pipex->child - 2],
+			pipex->pipe[2 * pipex->child + 1]);
+	close_allfds(pipex);
+	if (access(pipex->filename[pipex->child], X_OK) == 0)
+		execve(pipex->filename[pipex->child],
+			pipex->commands[pipex->child], pipex->paths);
+	print_error(errno);
 	exit(EXIT_SUCCESS);
 }
 
-void	parent_process(t_pipex *pipex, int *end)
+void	close_allfds(t_pipex *pipex)
 {
-	int	status;
+	int	i;
 
-	waitpid(-1, &status, 0);
-	close(end[1]);
-	dup2(end[0], STDIN_FILENO);
-	close(end[0]);
-	if (pipex->is_heredoc == 1)
-		unlink(".heredoc.tmp");
-	if (access(pipex->filename[1], X_OK) == 0)
-		execve(pipex->filename[1], pipex->commands[1], pipex->paths);
-	if (pipex->is_invalidinfile != 0)
+	if (pipex->fd_infile != -1)
+		close(pipex->fd_infile);
+	if (pipex->fd_outfile != -1)
+		close(pipex->fd_outfile);
+	i = 0;
+	while (i < (pipex->nb_cmds - 1) * 2)
 	{
-		errno = 2;
-		perror("Command not found");
-		exit(EXIT_FAILURE);
+		close(pipex->pipe[i]);
+		i++;
 	}
 }
 
-void	set_fds(t_pipex *pipex)
+void	parent_process(t_pipex *pipex)
 {
-	dup2(pipex->fd_infile, STDIN_FILENO);
-	close(pipex->fd_infile);
-	dup2(pipex->fd_outfile, STDOUT_FILENO);
-	close(pipex->fd_outfile);
+	int		status;
+
+	close_allfds(pipex);
+	pipex->child--;
+	while (pipex->child >= 0)
+	{
+		waitpid(pipex->pids[pipex->child], &status, 0);
+		pipex->child--;
+	}
+}
+
+void	redirect_fds(int input, int output)
+{
+	if (dup2(input, STDIN_FILENO) == -1)
+		print_error(errno);
+	close(input);
+	if (dup2(output, STDOUT_FILENO) == -1)
+		print_error(errno);
+	close(output);
 }
 
 void	execute_pipex(t_pipex *pipex)
 {
-	int		end[2];
-	pid_t	pid;
-
-	set_fds(pipex);
-	if (pipe(end) == -1)
+	create_pipes(pipex);
+	if (pipe(pipex->pipe) == -1)
 		print_error(errno);
-	pid = fork();
-	if (pid == -1)
-		print_error(errno);
-	if (pid == 0)
-		child_process(pipex, end);
-	else
-		parent_process(pipex, end);
+	while (pipex->child < pipex->nb_cmds)
+	{
+		pipex->pids[pipex->child] = fork();
+		if (pipex->pids[pipex->child] == -1)
+			print_error(errno);
+		if (pipex->pids[pipex->child] == 0)
+			child_process(pipex);
+		pipex->child++;
+	}
+	parent_process(pipex);
 }
