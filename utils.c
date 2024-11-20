@@ -76,13 +76,14 @@ void	check_paths(t_pipex *pipex)
 	while (pipex->commands[++i])
 	{
 		j = -1;
+		pipex->filename[i] = NULL;
+		if (access(pipex->commands[i][0], X_OK) == 0)
+		{
+			pipex->filename[i] = pipex->commands[i][0];
+			continue ;
+		}
 		while (pipex->paths[++j])
 		{
-			if (access(pipex->commands[i][0], X_OK) == 0)
-			{
-				pipex->filename[i] = pipex->commands[i][0];
-				break ;
-			}
 			tmp = copy_path_cmd(pipex->paths[j], pipex->commands[i][0]);
 			if (access(tmp, X_OK) == 0)
 			{

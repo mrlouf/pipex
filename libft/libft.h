@@ -107,5 +107,7 @@ char		*ft_read_buffer(int fd, char *stash, char *buffer);
 
 //	DEBUG
 void		cucufu(void);
+void		free_array(void **array);
+void		print_array(char **array);
 
 #endif
