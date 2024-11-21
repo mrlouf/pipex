@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 14:57:21 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 10:01:56 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 13:10:08 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	check_paths(t_pipex *pipex)
 	{
 		j = -1;
 		pipex->filename[i] = NULL;
+		if (pipex->paths == NULL)
+			continue ;
 		get_filename(pipex, i, j);
 	}
 }
@@ -86,7 +88,7 @@ void	get_filename(t_pipex *pipex, int i, int j)
 
 	if (access(pipex->commands[i][0], X_OK) == 0)
 	{
-		pipex->filename[i] = pipex->commands[i][0];
+		pipex->filename[i] = ft_strdup(pipex->commands[i][0]);
 		return ;
 	}
 	while (pipex->paths[++j])

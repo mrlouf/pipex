@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 09:50:31 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 13:04:44 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,10 @@ void	open_files(t_pipex *pipex)
 	else
 		pipex->fd_infile = open(pipex->args[0], O_RDONLY);
 	if (pipex->fd_infile < 0)
+	{
 		pipex->is_invalidinfile = 1;
+		pipex->exit_message = 127;
+	}
 	if (pipex->is_heredoc == 1)
 		pipex->fd_outfile = open(pipex->args[pipex->nb_cmds + 2], \
 			O_WRONLY | O_CREAT | O_APPEND, 0644);
@@ -96,6 +99,7 @@ void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp)
 	pipex->child = 0;
 	pipex->pipe = 0;
 	pipex->pids = 0;
+	pipex->exit_message = 0;
 }
 
 int	main(int ac, char **av, char **envp)
@@ -107,5 +111,5 @@ int	main(int ac, char **av, char **envp)
 	check_parameters(&pipex);
 	execute_pipex(&pipex);
 	clean_pipex(&pipex);
-	return (EXIT_SUCCESS);
+	return (pipex.exit_message);
 }

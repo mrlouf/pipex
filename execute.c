@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 10:00:46 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 13:00:23 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	child_process(t_pipex *pipex)
 	if (access(pipex->filename[pipex->child], X_OK) == 0)
 		execve(pipex->filename[pipex->child],
 			pipex->commands[pipex->child], pipex->paths);
+	pipex->exit_message = 127;
 	exit_error(errno);
 }
 

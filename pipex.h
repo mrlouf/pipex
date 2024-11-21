@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:50:10 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 10:17:58 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:59:35 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 
 typedef struct s_pipex
 {
+	int		exit_message;
 	int		fd_infile;
 	int		fd_outfile;
 	int		is_heredoc;
