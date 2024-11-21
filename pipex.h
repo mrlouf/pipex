@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:50:10 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 12:59:35 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:40:35 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	get_heredoc(t_pipex *pipex);
 //  ERRORS, FREES & DEBUG
 void	clean_pipex(t_pipex *pipex);
 void	exit_error(int err);
-void	free_array(void **array);
+void	command_error(char *cmd, char *str);
 void	free_filename(char **filename, int nb_filename);
 void	close_fds(int fd1, int fd2);
 

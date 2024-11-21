@@ -1,0 +1,16 @@
+Makefile
+README.md
+error.c
+error.o
+execute.c
+execute.o
+infile
+libft
+outfile
+pipex
+pipex.c
+pipex.h
+pipex.o
+test
+utils.c
+utils.o

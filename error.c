@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 13:03:35 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:08:39 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@ void	exit_error(int err)
 	errno = err;
 	perror("Error");
 	exit(EXIT_FAILURE);
+}
+
+void	command_error(char *cmd, char *str)
+{
+	ft_putstr_fd(cmd, 2);
+	ft_putendl_fd(str, 2);
 }
 
 void	free_filename(char **filename, int nb_filename)

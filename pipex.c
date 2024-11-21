@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 13:04:44 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:31:35 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	open_files(t_pipex *pipex)
 	if (pipex->fd_infile < 0)
 	{
 		pipex->is_invalidinfile = 1;
-		pipex->exit_message = 127;
+		pipex->exit_message = 1;
 	}
 	if (pipex->is_heredoc == 1)
 		pipex->fd_outfile = open(pipex->args[pipex->nb_cmds + 2], \
