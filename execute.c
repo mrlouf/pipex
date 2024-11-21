@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 13:00:23 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 13:14:12 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ void	child_process(t_pipex *pipex)
 		execve(pipex->filename[pipex->child],
 			pipex->commands[pipex->child], pipex->paths);
 	pipex->exit_message = 127;
-	exit_error(errno);
+	ft_putstr_fd("Command not found\n", 2);
+	exit(pipex->exit_message);
 }
 
 void	close_allfds(t_pipex *pipex)
