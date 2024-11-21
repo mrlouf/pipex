@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 18:46:34 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 10:00:46 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ void	child_process(t_pipex *pipex)
 	if (access(pipex->filename[pipex->child], X_OK) == 0)
 		execve(pipex->filename[pipex->child],
 			pipex->commands[pipex->child], pipex->paths);
-	print_error(errno);
-	exit(EXIT_SUCCESS);
+	exit_error(errno);
 }
 
 void	close_allfds(t_pipex *pipex)
@@ -62,10 +61,10 @@ void	parent_process(t_pipex *pipex)
 void	redirect_fds(int input, int output)
 {
 	if (dup2(input, STDIN_FILENO) == -1)
-		print_error(errno);
+		exit_error(errno);
 	close(input);
 	if (dup2(output, STDOUT_FILENO) == -1)
-		print_error(errno);
+		exit_error(errno);
 	close(output);
 }
 
@@ -73,12 +72,12 @@ void	execute_pipex(t_pipex *pipex)
 {
 	create_pipes(pipex);
 	if (pipe(pipex->pipe) == -1)
-		print_error(errno);
+		exit_error(errno);
 	while (pipex->child < pipex->nb_cmds)
 	{
 		pipex->pids[pipex->child] = fork();
 		if (pipex->pids[pipex->child] == -1)
-			print_error(errno);
+			exit_error(errno);
 		if (pipex->pids[pipex->child] == 0)
 			child_process(pipex);
 		pipex->child++;

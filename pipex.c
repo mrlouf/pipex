@@ -6,12 +6,38 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 17:26:20 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 09:50:31 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include "libft/libft.h"
+
+void	get_heredoc(t_pipex *pipex)
+{
+	int		fd_in;
+	int		fd_out;
+	char	*line;
+
+	fd_out = open(".heredoc.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	fd_in = dup(STDIN_FILENO);
+	if (fd_in < 0 || fd_out < 0)
+		exit_error(errno);
+	line = "";
+	while (1)
+	{
+		line = get_next_line(fd_in);
+		if (line == NULL)
+			break ;
+		if (ft_strlen(pipex->args[1]) + 1 == ft_strlen(line)
+			&& !ft_strncmp(line, pipex->args[1], ft_strlen(pipex->args[1] + 1)))
+			close(fd_in);
+		else
+			ft_putstr_fd(line, fd_out);
+		free(line);
+	}
+	close(fd_out);
+}
 
 void	open_files(t_pipex *pipex)
 {
@@ -34,7 +60,7 @@ void	open_files(t_pipex *pipex)
 		pipex->fd_outfile = open(pipex->args[pipex->nb_cmds + 1], \
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->fd_outfile < 0)
-		print_error(EACCES);
+		exit_error(EACCES);
 }
 
 void	create_pipes(t_pipex *pipex)
@@ -44,21 +70,21 @@ void	create_pipes(t_pipex *pipex)
 	i = -1;
 	pipex->pids = malloc(sizeof(int *) * pipex->nb_cmds);
 	if (!pipex->pids)
-		print_error(errno);
+		exit_error(errno);
 	pipex->pipe = malloc(sizeof(int *) * 2 * (pipex->nb_cmds - 1));
 	if (!pipex->pipe)
-		print_error(errno);
+		exit_error(errno);
 	while (++i < pipex->nb_cmds - 1)
 	{
 		if (pipe(pipex->pipe + 2 * i) == -1)
-			print_error(errno);
+			exit_error(errno);
 	}
 }
 
 void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp)
 {
 	if (ac < 5)
-		print_error(EINVAL);
+		exit_error(EINVAL);
 	pipex->fd_infile = -1;
 	pipex->fd_outfile = -1;
 	pipex->is_heredoc = 0;

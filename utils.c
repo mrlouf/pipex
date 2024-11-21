@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 14:57:21 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 16:24:07 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 10:01:56 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,29 +70,35 @@ void	check_paths(t_pipex *pipex)
 {
 	int		i;
 	int		j;
-	char	*tmp;
 
 	i = -1;
 	while (pipex->commands[++i])
 	{
 		j = -1;
 		pipex->filename[i] = NULL;
-		if (access(pipex->commands[i][0], X_OK) == 0)
+		get_filename(pipex, i, j);
+	}
+}
+
+void	get_filename(t_pipex *pipex, int i, int j)
+{
+	char	*tmp;
+
+	if (access(pipex->commands[i][0], X_OK) == 0)
+	{
+		pipex->filename[i] = pipex->commands[i][0];
+		return ;
+	}
+	while (pipex->paths[++j])
+	{
+		tmp = copy_path_cmd(pipex->paths[j], pipex->commands[i][0]);
+		if (access(tmp, X_OK) == 0)
 		{
-			pipex->filename[i] = pipex->commands[i][0];
-			continue ;
-		}
-		while (pipex->paths[++j])
-		{
-			tmp = copy_path_cmd(pipex->paths[j], pipex->commands[i][0]);
-			if (access(tmp, X_OK) == 0)
-			{
-				pipex->filename[i] = ft_strdup(tmp);
-				free(tmp);
-				break ;
-			}
+			pipex->filename[i] = ft_strdup(tmp);
 			free(tmp);
+			break ;
 		}
+		free(tmp);
 	}
 }
 
@@ -102,7 +108,7 @@ void	check_parameters(t_pipex *pipex)
 
 	pipex->commands = (char ***)malloc(sizeof(char **) * (pipex->nb_cmds + 1));
 	if (!pipex->commands)
-		print_error(ENOMEM);
+		exit_error(ENOMEM);
 	pipex->commands[pipex->nb_cmds] = NULL;
 	i = -1;
 	while (++i < pipex->nb_cmds)
@@ -110,38 +116,12 @@ void	check_parameters(t_pipex *pipex)
 		pipex->commands[i] = \
 			ft_split(pipex->args[i + 1 + pipex->is_heredoc], ' ');
 		if (pipex->commands[i] == NULL)
-			print_error(ENOMEM);
+			exit_error(ENOMEM);
 	}
 	pipex->filename = (char **)malloc(sizeof(char **) * (pipex->nb_cmds + 1));
 	if (!pipex->filename)
-		print_error(ENOMEM);
+		exit_error(ENOMEM);
 	pipex->filename[pipex->nb_cmds] = NULL;
 	get_paths(pipex);
 	check_paths(pipex);
-}
-
-void	get_heredoc(t_pipex *pipex)
-{
-	int		fd_in;
-	int		fd_out;
-	char	*line;
-
-	fd_out = open(".heredoc.tmp", O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	fd_in = dup(STDIN_FILENO);
-	if (fd_in < 0 || fd_out < 0)
-		print_error(errno);
-	line = "";
-	while (1)
-	{
-		line = get_next_line(fd_in);
-		if (line == NULL)
-			break ;
-		if (ft_strlen(pipex->args[1]) + 1 == ft_strlen(line)
-			&& !ft_strncmp(line, pipex->args[1], ft_strlen(pipex->args[1] + 1)))
-			close(fd_in);
-		else
-			ft_putstr_fd(line, fd_out);
-		free(line);
-	}
-	close(fd_out);
 }

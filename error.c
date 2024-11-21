@@ -6,39 +6,37 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/19 16:10:03 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 10:14:41 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 #include "libft/libft.h"
 
-//	TODO: function to unlink here_doc
-
-void	print_error(int err)
+void	exit_error(int err)
 {
 	errno = err;
 	perror("Error");
 	exit(EXIT_FAILURE);
 }
 
-void	free_array(void **array)
+void	free_filename(char **filename, int nb_filename)
 {
 	int	i;
 
-	if (array == NULL)
-		return ;
 	i = -1;
-	while (array[++i])
-		free(array[i]);
-	free(array);
-	array = NULL;
+	while (++i < nb_filename)
+		free(filename[i]);
+	free(filename);
+	filename = NULL;
 }
 
 void	close_fds(int fd1, int fd2)
 {
-	close(fd1);
-	close(fd2);
+	if (fd1 > 0)
+		close(fd1);
+	if (fd2 > 0)
+		close(fd2);
 }
 
 void	clean_pipex(t_pipex *pipex)
@@ -54,21 +52,9 @@ void	clean_pipex(t_pipex *pipex)
 	free(pipex->commands);
 	pipex->commands = NULL;
 	free_array((void **)pipex->paths);
-	free_array((void **)pipex->filename);
+	free_filename(pipex->filename, pipex->nb_cmds);
 	free(pipex->pids);
 	free(pipex->pipe);
 	if (pipex->is_heredoc == 1)
 		unlink(".heredoc.tmp");
-}
-
-void	print_array(char **array)
-{
-	int	i;
-
-	i = -1;
-	while (array[++i])
-	{
-		ft_printf("%s ", array[i]);
-	}
-	ft_printf("\n");
 }
