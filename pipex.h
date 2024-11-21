@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:50:10 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 14:40:35 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:41:54 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	free_filename(char **filename, int nb_filename);
 void	close_fds(int fd1, int fd2);
 
 //	UTILS & DEBUG
-void	print_array(char **array);
 char	*copy_path_cmd(const char *s1, const char *s2);
 
 #endif
