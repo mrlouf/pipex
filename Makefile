@@ -48,7 +48,7 @@ clean:
 
 fclean: clean
 	/bin/rm -f $(NAME)
-	make fclean -C libft
+	/bin/rm -f $(LIB)
 
 re: fclean all
 
