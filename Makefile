@@ -25,7 +25,7 @@ LIB			:=	$(LIBFTDIR)/libft.a
 
 CC			:=	-cc
 
-CFLAGS		:=	-Werror -Wextra -Wall -Wunreachable-code -pthread -g -fsanitize=address
+CFLAGS		:=	-Werror -Wextra -Wall -Wunreachable-code #-pthread -g -fsanitize=address
 
 INCLUDE		:=	-I
 

@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 18:49:37 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 14:31:35 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:47:06 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,20 @@ void	get_heredoc(t_pipex *pipex)
 	fd_in = dup(STDIN_FILENO);
 	if (fd_in < 0 || fd_out < 0)
 		exit_error(errno);
-	line = "";
-	while (1)
+	line = NULL;
+	ft_putstr_fd("here_doc>", 1);
+	line = get_next_line(fd_in);
+	while (line)
 	{
-		line = get_next_line(fd_in);
-		if (line == NULL)
-			break ;
 		if (ft_strlen(pipex->args[1]) + 1 == ft_strlen(line)
 			&& !ft_strncmp(line, pipex->args[1], ft_strlen(pipex->args[1] + 1)))
 			close(fd_in);
 		else
 			ft_putstr_fd(line, fd_out);
 		free(line);
+		line = NULL;
+		ft_putstr_fd("here_doc>", 1);
+		line = get_next_line(fd_in);
 	}
 	close(fd_out);
 }
@@ -54,7 +56,7 @@ void	open_files(t_pipex *pipex)
 	if (pipex->fd_infile < 0)
 	{
 		pipex->is_invalidinfile = 1;
-		pipex->exit_message = 1;
+		pipex->exit_code = 1;
 	}
 	if (pipex->is_heredoc == 1)
 		pipex->fd_outfile = open(pipex->args[pipex->nb_cmds + 2], \
@@ -99,7 +101,7 @@ void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp)
 	pipex->child = 0;
 	pipex->pipe = 0;
 	pipex->pids = 0;
-	pipex->exit_message = 0;
+	pipex->exit_code = 0;
 }
 
 int	main(int ac, char **av, char **envp)
@@ -111,5 +113,5 @@ int	main(int ac, char **av, char **envp)
 	check_parameters(&pipex);
 	execute_pipex(&pipex);
 	clean_pipex(&pipex);
-	return (pipex.exit_message);
+	return (pipex.exit_code);
 }

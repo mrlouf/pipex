@@ -6,7 +6,7 @@
 /*   By: nponchon <nponchon@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 12:55:07 by nponchon          #+#    #+#             */
-/*   Updated: 2024/11/21 14:19:24 by nponchon         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:42:13 by nponchon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	child_process(t_pipex *pipex)
 	if (access(pipex->filename[pipex->child], X_OK) == 0)
 		execve(pipex->filename[pipex->child],
 			pipex->commands[pipex->child], pipex->paths);
-	pipex->exit_message = 127;
-	command_error(pipex->commands[pipex->child][0], " : command not found");
-	exit(pipex->exit_message);
+	pipex->exit_code = 127;
+	message_error(pipex->commands[pipex->child][0], " : command not found");
+	exit(pipex->exit_code);
 }
 
 void	close_allfds(t_pipex *pipex)
@@ -64,7 +64,7 @@ void	redirect_fds(int input, int output)
 {
 	if (dup2(input, STDIN_FILENO) == -1)
 	{
-		ft_putendl_fd("Error: No such file or directory", 2);
+		message_error("Infile: ", "No such file or directory");
 		exit(errno);
 	}
 	close(input);
